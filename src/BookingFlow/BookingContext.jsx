@@ -79,9 +79,7 @@ export const BookingProvider = ({ children }) => {
       }
     };
 
-    if (businessId) {
-      fetchBusiness();
-    }
+    fetchBusiness();
   }, [businessId]);
 
   const updateBooking = (key, value) => {
