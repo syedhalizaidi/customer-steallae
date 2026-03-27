@@ -59,7 +59,7 @@ const PaymentConfirm = () => {
           return;
       }
 
-      const response = await businessService.createReservation(businessId, payload);
+      const response = await businessService.createReservation(business?.id || businessId, payload);
 
       if (response.success && response.data?.payment_link) {
         // Redirect to Stripe Checkout
