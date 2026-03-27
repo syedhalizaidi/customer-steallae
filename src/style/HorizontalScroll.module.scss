@@ -1,0 +1,28 @@
+.horizontalSection {
+  position: relative;
+  height: 50%;
+  overflow: hidden;
+  display:flexbox; /* centers container */
+  align-items:end; /* vertical center */
+//   border-radius: 12px;
+}
+
+.horizontalContainer {
+  display: flex;
+  height: 80%;
+  width: 50%;
+  gap: 1rem; 
+  will-change: transform;
+  border-radius: 12px;
+}
+
+.scrollImage {
+  flex: 0 0 auto;
+  vertical-align: middle;
+    max-width: 100%;
+    display: inline-block;
+  width: 50%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px; 
+}

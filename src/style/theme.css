@@ -1,0 +1,43 @@
+:root {
+  /* Light Theme */
+  --bg-primary: #F7F4F2;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --text-primary: #111827;
+  --text-secondary: #4a5568;
+  --text-muted: #9CA3AF;
+  --border-primary: #E5E7EB;
+  --border-secondary: #f3f4f6;
+  --accent-primary: #EC4C24;
+  --accent-secondary: #00b176;
+  --accent-secondary-alpha: rgba(16, 185, 129, 0.1);
+  --accent-primary-alpha: rgba(236, 76, 36, 0.1);
+  --accent-hover: #D63D18;
+  --error: #ef4444;
+  --error-hover: #dc2626;
+  --error-alpha: rgba(239, 68, 68, 0.1);
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --header-border: rgba(243, 244, 246, 0.5);
+  --grid-color: #E5E0DD;
+}
+
+[data-theme='dark'] {
+  /* Dark Theme */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #121212;
+  --bg-card: #181818;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6b7280;
+  --border-primary: #333333;
+  --border-secondary: #262626;
+  --accent-primary: #EC4C24; /* Keep the orange accent for brand consistency */
+  --accent-primary-alpha: rgba(236, 76, 36, 0.2);
+  --accent-hover: #D63D18;
+  --error: #f87171;
+  --error-hover: #ef4444;
+  --error-alpha: rgba(248, 113, 113, 0.2);
+  --header-bg: rgba(18, 18, 18, 0.8);
+  --header-border: rgba(51, 51, 51, 0.5);
+  --grid-color: #262626;
+}
