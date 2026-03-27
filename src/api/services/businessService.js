@@ -122,11 +122,11 @@ export const businessService = {
         businessId === "demo-business" ||
         businessId.startsWith("http")
       ) {
-        url = `/business/public/${
+        const lookUpUrl =
           businessId && businessId.startsWith("http")
-            ? businessId
-            : window.location.origin + window.location.pathname
-        }`;
+            ? new URL(businessId).origin
+            : window.location.origin;
+        url = `/business/public/${lookUpUrl}`;
       }
 
       const response = await api.get(url);
