@@ -31,9 +31,10 @@ function App() {
           <Route path="service" element={<ServiceSelect />} />
           <Route path="time" element={<TimeSelect />} />
           <Route path="confirm" element={<PaymentConfirm />} />
-          <Route path="success" element={<PaymentSuccess />} />
-          <Route path="cancel" element={<PaymentCancelled />} />
         </Route>
+          <Route path="payment-success" element={<PaymentSuccess />} />
+          <Route path="payment-cancel" element={<PaymentCancelled />} />
+
       </Routes>
       <ToastContainer position="top-right" autoClose={5000} />
     </Router>

@@ -388,6 +388,22 @@ export const businessService = {
         }
     },
 
+    verifyCheckoutSession: async (sessionId) => {
+        try {
+            const response = await api.get(`/stripe/verify-checkout-session/${sessionId}`);
+            return {
+                success: true,
+                data: response.data,
+                message: 'Checkout session verified successfully!'
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.message || 'Failed to verify checkout session.'
+            };
+        }
+    },
+
     createReservation: async (businessId, reservationData) => {
         try {
             const response = await api.post(`/v1/business/${businessId}/reservations`, reservationData);
