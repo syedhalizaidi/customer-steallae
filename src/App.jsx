@@ -20,7 +20,7 @@ function App() {
         <Route path="/" element={<Navigate to="/" replace />} />
         
         {/* Booking Flow Routes */}
-        <Route path="/book/:businessId" element={
+        <Route path="/" element={
           <BookingProvider>
             <BookingLayout />
           </BookingProvider>
