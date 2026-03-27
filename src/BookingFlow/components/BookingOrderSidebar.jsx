@@ -16,17 +16,17 @@ const BookingOrderSidebar = () => {
 
   const handleContinue = () => {
     if (currentPath.includes('/professional')) {
-      navigate(`/book/${businessId}/service`);
+      navigate(`/service`);
     } else if (currentPath.includes('/service')) {
-      navigate(`/book/${businessId}/time`);
+      navigate(`/time`);
     } else if (currentPath.includes('/time')) {
-      navigate(`/book/${businessId}/confirm`);
+      navigate(`/confirm`);
     } else {
       // Fallback to original logic if path doesn't match expected steps
-      if (!staff) navigate(`/book/${businessId}/professional`);
-      else if (selectedServices.length === 0) navigate(`/book/${businessId}/service`);
-      else if (!timeSlot) navigate(`/book/${businessId}/time`);
-      else navigate(`/book/${businessId}/confirm`);
+      if (!staff) navigate(`/professional`);
+      else if (selectedServices.length === 0) navigate(`/service`);
+      else if (!timeSlot) navigate(`/time`);
+      else navigate(`/confirm`);
     }
   };
 

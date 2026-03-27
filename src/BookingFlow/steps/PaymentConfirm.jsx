@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { businessService } from '../../api/services/businessService';
 
 const PaymentConfirm = () => {
-  const { bookingData, calculateTotal, business, updateBooking } = useBooking();
+  const { bookingData, calculateTotal, business, updateBooking, businessId } = useBooking();
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       customerName: bookingData.customerInfo.name || '',
@@ -17,7 +17,6 @@ const PaymentConfirm = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { businessId } = useParams();
 
   const onSubmit = async (data) => {
     setIsLoading(true);

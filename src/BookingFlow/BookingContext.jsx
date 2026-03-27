@@ -13,7 +13,10 @@ export const useBooking = () => {
 };
 
 export const BookingProvider = ({ children }) => {
-  const { businessId } = useParams();
+  const { businessId: paramId } = useParams();
+  const businessId = paramId || window.location.hostname;
+  const storageKey = `booking_data_${businessId}`;
+
   const [business, setBusiness] = useState(null);
   const [services, setServices] = useState([]);
   const [staffList, setStaffList] = useState([]);
@@ -23,7 +26,7 @@ export const BookingProvider = ({ children }) => {
 
   // Booking State - Initialize from localStorage if available
   const [bookingData, setBookingData] = useState(() => {
-    const saved = localStorage.getItem(`booking_data_${businessId}`);
+    const saved = localStorage.getItem(storageKey);
     const initial = {
       location: null,
       staff: null,
@@ -53,10 +56,8 @@ export const BookingProvider = ({ children }) => {
 
   // Sync bookingData to localStorage
   useEffect(() => {
-    if (businessId) {
-      localStorage.setItem(`booking_data_${businessId}`, JSON.stringify(bookingData));
-    }
-  }, [bookingData, businessId]);
+    localStorage.setItem(storageKey, JSON.stringify(bookingData));
+  }, [bookingData, storageKey]);
 
   useEffect(() => {
     const fetchBusiness = async () => {

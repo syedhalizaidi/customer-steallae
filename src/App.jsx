@@ -16,9 +16,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Redirect base path to a demo business ID for now, or a landing page if you have one */}
-        <Route path="/" element={<Navigate to="/" replace />} />
-        
         {/* Booking Flow Routes */}
         <Route path="/" element={
           <BookingProvider>

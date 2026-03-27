@@ -11,7 +11,7 @@ const BookingLanding = () => {
   const handleStartBooking = () => {
     // If multiple locations, go to location select. Otherwise go to professional select.
     // For now, let's assume multiple locations as in the image.
-    navigate(`/book/${businessId}/location`);
+    navigate(`/location`);
   };
 
   return (

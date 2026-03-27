@@ -11,19 +11,19 @@ const BookingLayout = () => {
   const { businessId } = useParams();
 
   const steps = [
-    { path: `/book/${businessId}`, label: 'Welcome', icon: null },
-    { path: `/book/${businessId}/location`, label: 'Location', icon: MapPin },
-    { path: `/book/${businessId}/professional`, label: 'Professional', icon: User },
-    { path: `/book/${businessId}/service`, label: 'Service', icon: Briefcase },
-    { path: `/book/${businessId}/time`, label: 'Time', icon: Calendar },
-    { path: `/book/${businessId}/confirm`, label: 'Done', icon: CheckCircle },
+    { path: `/`, label: 'Welcome', icon: null },
+    { path: `/location`, label: 'Location', icon: MapPin },
+    { path: `/professional`, label: 'Professional', icon: User },
+    { path: `/service`, label: 'Service', icon: Briefcase },
+    { path: `/time`, label: 'Time', icon: Calendar },
+    { path: `/confirm`, label: 'Done', icon: CheckCircle },
   ];
 
   const currentStepIndex = steps.findIndex(step => 
-    step.path === location.pathname || (step.path === `/book/${businessId}` && location.pathname === `/book/${businessId}/`)
+    step.path === location.pathname
   );
 
-  const isLandingPage = location.pathname === `/book/${businessId}` || location.pathname === `/book/${businessId}/`;
+  const isLandingPage = location.pathname === `/`;
 
   if (loading) {
     return (

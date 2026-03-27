@@ -6,7 +6,8 @@ import { businessService } from '../api/services/businessService';
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { businessId } = useParams();
+  const { businessId: paramId } = useParams();
+  const businessId = paramId || window.location.hostname;
   const sessionId = searchParams.get('session_id');
   
   const [verifying, setVerifying] = useState(true);

@@ -175,13 +175,13 @@ const TimeSelect = () => {
       {/* Navigation Buttons */}
       <div className="mt-12 pt-8 border-t border-[var(--border-primary)] flex items-center justify-between">
         <button 
-          onClick={() => navigate(`/book/${businessId}/service`)}
+          onClick={() => navigate(`/service`)}
           className="px-10 py-5 border border-black text-black text-[11px] font-black uppercase tracking-[0.2em] rounded-3xl hover:bg-black hover:text-white transition-all shadow-sm"
         >
           Back
         </button>
         <button 
-          onClick={() => navigate(`/book/${businessId}/confirm`)}
+          onClick={() => navigate(`/confirm`)}
           disabled={!bookingData.timeSlot}
           className="px-10 py-5 bg-black text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-3xl hover:opacity-90 transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-xl shadow-black/10"
         >

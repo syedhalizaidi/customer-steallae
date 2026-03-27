@@ -70,7 +70,7 @@ const LocationSelect = () => {
 
   const handleSelectLocation = (location) => {
     updateBooking('location', location);
-    navigate(`/book/${businessId}/professional`);
+    navigate(`/professional`);
   };
 
   return (
