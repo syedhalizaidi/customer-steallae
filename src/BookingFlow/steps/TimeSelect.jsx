@@ -3,8 +3,8 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useBooking } from '../BookingContext';
-import { Clock, ChevronLeft, ChevronRight, Sun, Sunset, Moon } from 'lucide-react';
-import { getUTCDateTime, formatInTimezone, getTimezoneOffset } from '../../utils/timezoneUtils';
+import { Clock, ChevronLeft, ChevronRight, Sun, Sunset, Moon, Globe } from 'lucide-react';
+import { getWallDateTime, formatInTimezone, getTimezoneOffset, getLocalTimeFromWall } from '../../utils/timezoneUtils';
 import './TimeSelect.css'; // We'll create this for calendar overrides
 
 const TimeSelect = () => {
@@ -13,15 +13,13 @@ const TimeSelect = () => {
   // Initialize selectedDate based on existing bookingData.date (converted to business local date)
   const [selectedDate, setSelectedDate] = useState(() => {
     if (bookingData.date) {
-        const businessTimezone = business?.timezone || 'America/Juneau';
-        const parts = new Intl.DateTimeFormat('en-US', {
-            timeZone: businessTimezone,
-            year: 'numeric', month: 'numeric', day: 'numeric'
-        }).formatToParts(bookingData.date);
-        const p = {};
-        parts.forEach(part => p[part.type] = part.value);
-        // Create a local date for the calendar representing the same wall-date
-        return new Date(p.year, p.month - 1, p.day);
+        // Since bookingData.date is now "Fake UTC" (Wall Time), 
+        // we can just use its UTC parts directly
+        return new Date(
+          bookingData.date.getUTCFullYear(),
+          bookingData.date.getUTCMonth(),
+          bookingData.date.getUTCDate()
+        );
     }
     return new Date();
   });
@@ -33,10 +31,8 @@ const TimeSelect = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
     
-    // Update booking data with a neutral UTC Date (Noon) that represents this day in the business timezone
-    // This prevents the date from "shifting" when displayed in the business timezone
-    const businessTimezone = business?.timezone || 'America/Juneau';
-    const neutralDate = getUTCDateTime(date, "12:00", businessTimezone);
+    // Store as a "neutral" Wall Time (Fake UTC) at Noon
+    const neutralDate = getWallDateTime(date, "12:00");
     
     updateBooking('date', neutralDate);
     setActiveSlot(null);
@@ -46,9 +42,8 @@ const TimeSelect = () => {
   const handleSlotSelect = (slot) => {
     setActiveSlot(slot);
     
-    // Update booking data with a UTC Date object that represents this time in the business timezone
-    const businessTimezone = business?.timezone || 'America/Juneau';
-    const newDate = getUTCDateTime(selectedDate, slot, businessTimezone);
+    // Store as "Wall Time" (Fake UTC) so localStorage matches slot string (e.g. 15:00 -> 15:00Z)
+    const newDate = getWallDateTime(selectedDate, slot);
     
     updateBooking('date', newDate);
     updateBooking('timeSlot', slot);
@@ -80,6 +75,7 @@ const TimeSelect = () => {
             year: 'numeric', month: '2-digit', day: '2-digit'
         }).format(slotDate);
         
+        // selectedDate is client-local wall date. We need its wall parts.
         const selectedDateStr = new Intl.DateTimeFormat('en-US', {
             year: 'numeric', month: '2-digit', day: '2-digit'
         }).format(selectedDate);
@@ -159,9 +155,8 @@ const TimeSelect = () => {
            Available slots for {new Intl.DateTimeFormat('en-US', { 
               month: 'long', 
               day: 'numeric', 
-              year: 'numeric',
-              timeZone: business?.timezone || 'America/Juneau'
-           }).format(bookingData.date || selectedDate)}
+              year: 'numeric'
+           }).format(selectedDate)}
         </p>
       </div>
 
@@ -186,8 +181,15 @@ const TimeSelect = () => {
                 <Clock size={14} />
                 Barber's Timezone
              </div>
-             <p className="text-[10px] font-bold text-blue-600/80 uppercase">
+             <p className="text-[10px] font-bold text-blue-600/80 uppercase mb-3">
                 {business?.timezone || 'America/Juneau'} ({getTimezoneOffset(business?.timezone || 'America/Juneau')})
+             </p>
+             <div className="flex items-center gap-2 text-[10px] font-black text-blue-800 uppercase tracking-wider mb-2">
+                <Globe size={14} />
+                Your Local Time
+             </div>
+             <p className="text-[10px] font-bold text-blue-600/80 uppercase">
+                {bookingData.timeSlot ? `${getLocalTimeFromWall(bookingData.date, business?.timezone || 'America/Juneau')}` : 'Select a slot'}
              </p>
           </div>
         </div>

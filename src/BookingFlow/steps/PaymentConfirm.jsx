@@ -30,15 +30,11 @@ const PaymentConfirm = () => {
       });
 
       // Format date to YYYY-MM-DD
-      // Format date to YYYY-MM-DD in business timezone
-      const businessTimezone = business?.timezone || 'America/Juneau';
-      const parts = new Intl.DateTimeFormat('en-US', {
-        timeZone: businessTimezone,
-        year: 'numeric', month: '2-digit', day: '2-digit'
-      }).formatToParts(bookingData.date);
-      const p = {};
-      parts.forEach(part => p[part.type] = part.value);
-      const formattedDate = `${p.year}-${p.month}-${p.day}`;
+      // bookingData.date is Wall Time (Fake UTC)
+      const year = bookingData.date.getUTCFullYear();
+      const month = (bookingData.date.getUTCMonth() + 1).toString().padStart(2, '0');
+      const day = bookingData.date.getUTCDate().toString().padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
       
       // Extract time from timeSlot (e.g., "09:00 - 09:30" -> "09:00")
       const timeMatch = bookingData.timeSlot?.match(/(\d{2}:\d{2})/);

@@ -1,19 +1,29 @@
 /**
- * Converts a date and time string into a UTC Date object that represents 
- * that specific time in the target timezone.
+ * Returns a Date object that represents the target "wall time" in UTC.
+ * This ensures that JSON.stringify(date) shows the selected business time (e.g. 15:00 -> 15:00Z)
  * 
- * @param {Date} date - The date object (year/month/day)
- * @param {string} timeString - Time in "HH:mm" format
- * @param {string} timezone - IANA timezone string (e.g., "America/Juneau")
- * @returns {Date} - A Date object correctly aligned to UTC
+ * @param {Date} date - The date object from calendar
+ * @param {string} timeString - "HH:mm"
+ * @returns {Date} - A "Wall Time" Date object (Fake UTC)
  */
-export const getUTCDateTime = (date, timeString, timezone = 'UTC') => {
+export const getWallDateTime = (date, timeString) => {
   if (!timeString) return null;
-  
   const [hours, minutes] = timeString.split(':').map(Number);
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
+  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes));
+};
+
+/**
+ * Converts a "Wall Time" Date object (Fake UTC) into a Real UTC Date object.
+ */
+export const wallToRealUTC = (wallDate, timezone) => {
+  if (!wallDate) return null;
+  
+  // We need to find what 15:00 in "timezone" is in real UTC
+  const year = wallDate.getUTCFullYear();
+  const month = wallDate.getUTCMonth();
+  const day = wallDate.getUTCDate();
+  const hours = wallDate.getUTCHours();
+  const minutes = wallDate.getUTCMinutes();
 
   const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone: timezone,
@@ -22,13 +32,9 @@ export const getUTCDateTime = (date, timeString, timezone = 'UTC') => {
     hour12: false
   });
 
-  // Target "wall time" as UTC millis for calculation
   const targetWallMillis = Date.UTC(year, month, day, hours, minutes);
-  
-  // Initial guess
   let utcMillis = targetWallMillis;
   
-  // Refine estimate to account for timezone offset
   for (let i = 0; i < 2; i++) {
     const parts = formatter.formatToParts(new Date(utcMillis));
     const p = {};
@@ -47,6 +53,19 @@ export const getUTCDateTime = (date, timeString, timezone = 'UTC') => {
   }
   
   return new Date(utcMillis);
+};
+
+/**
+ * Returns the local time string for a wall-time date.
+ */
+export const getLocalTimeFromWall = (wallDate, timezone) => {
+    const realUTC = wallToRealUTC(wallDate, timezone);
+    if (!realUTC) return '';
+    return realUTC.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
 };
 
 /**
