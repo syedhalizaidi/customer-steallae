@@ -76,32 +76,16 @@ const PaymentSuccess = () => {
             </div>
 
             <div className="p-8 space-y-8">
-              <div className="space-y-4">
-                 <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm border border-gray-100">
-                       <Calendar size={18} className="text-black" />
-                    </div>
-                    <div>
-                       <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Date & Time</p>
-                       <p className="text-sm font-black text-black">Scheduled for today</p>
-                    </div>
-                 </div>
-
-                 <p className="text-[11px] font-bold text-[var(--text-secondary)] leading-relaxed italic text-center px-4">
-                    We've sent a confirmation email with all the details. We'll see you soon!
-                 </p>
-              </div>
-
               <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
                 <button 
                   onClick={() => navigate('/')}
-                  className="w-full py-4 bg-black text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-black text-white cursor-pointer text-[11px] font-black uppercase tracking-[0.2em] rounded-xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                 >
                   <Home size={14} /> Back to Home
                 </button>
                 <button 
                   onClick={() => navigate('/business-dashboard')}
-                  className="w-full py-4 bg-white text-black text-[11px] font-black uppercase tracking-[0.2em] rounded-xl border border-gray-200 hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-white text-black text-[11px] cursor-pointer font-black uppercase tracking-[0.2em] rounded-xl border border-gray-200 hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
                 >
                   Go to Dashboard <ArrowRight size={14} />
                 </button>
