@@ -4,18 +4,41 @@ import 'react-calendar/dist/Calendar.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useBooking } from '../BookingContext';
 import { Clock, ChevronLeft, ChevronRight, Sun, Sunset, Moon } from 'lucide-react';
+import { getUTCDateTime, formatInTimezone, getTimezoneOffset } from '../../utils/timezoneUtils';
 import './TimeSelect.css'; // We'll create this for calendar overrides
 
 const TimeSelect = () => {
   const { business, bookingData, updateBooking, allOccupiedSlots } = useBooking();
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [activeSlot, setActiveSlot] = useState(null);
+  
+  // Initialize selectedDate based on existing bookingData.date (converted to business local date)
+  const [selectedDate, setSelectedDate] = useState(() => {
+    if (bookingData.date) {
+        const businessTimezone = business?.timezone || 'America/Juneau';
+        const parts = new Intl.DateTimeFormat('en-US', {
+            timeZone: businessTimezone,
+            year: 'numeric', month: 'numeric', day: 'numeric'
+        }).formatToParts(bookingData.date);
+        const p = {};
+        parts.forEach(part => p[part.type] = part.value);
+        // Create a local date for the calendar representing the same wall-date
+        return new Date(p.year, p.month - 1, p.day);
+    }
+    return new Date();
+  });
+
+  const [activeSlot, setActiveSlot] = useState(bookingData.timeSlot);
   const navigate = useNavigate();
   const { businessId } = useParams();
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    updateBooking('date', date);
+    
+    // Update booking data with a neutral UTC Date (Noon) that represents this day in the business timezone
+    // This prevents the date from "shifting" when displayed in the business timezone
+    const businessTimezone = business?.timezone || 'America/Juneau';
+    const neutralDate = getUTCDateTime(date, "12:00", businessTimezone);
+    
+    updateBooking('date', neutralDate);
     setActiveSlot(null);
     updateBooking('timeSlot', null);
   };
@@ -23,13 +46,11 @@ const TimeSelect = () => {
   const handleSlotSelect = (slot) => {
     setActiveSlot(slot);
     
-    // Update date first (including the selected time)
-    const [hours, minutes] = slot.split(':').map(Number);
-    const newDate = new Date(selectedDate);
-    newDate.setHours(hours, minutes, 0, 0);
+    // Update booking data with a UTC Date object that represents this time in the business timezone
+    const businessTimezone = business?.timezone || 'America/Juneau';
+    const newDate = getUTCDateTime(selectedDate, slot, businessTimezone);
+    
     updateBooking('date', newDate);
-
-    // Then update timeSlot (which is after 'date' in the clearing sequence)
     updateBooking('timeSlot', slot);
   };
 
@@ -47,18 +68,25 @@ const TimeSelect = () => {
     }
 
     // Get occupied times for the selected staff and date
+    const businessTimezone = business?.timezone || 'America/Juneau';
     const occupiedTimes = allOccupiedSlots
       .filter(slot => {
         if (!slot.instance_id || !bookingData.staff || slot.instance_id !== bookingData.staff.id) return false;
+        
+        // Convert the UTC slot start_time to the business wall-time for comparison
         const slotDate = new Date(slot.start_time);
-        return slotDate.getFullYear() === selectedDate.getFullYear() &&
-               slotDate.getMonth() === selectedDate.getMonth() &&
-               slotDate.getDate() === selectedDate.getDate();
+        const businessDateStr = new Intl.DateTimeFormat('en-US', {
+            timeZone: businessTimezone,
+            year: 'numeric', month: '2-digit', day: '2-digit'
+        }).format(slotDate);
+        
+        const selectedDateStr = new Intl.DateTimeFormat('en-US', {
+            year: 'numeric', month: '2-digit', day: '2-digit'
+        }).format(selectedDate);
+
+        return businessDateStr === selectedDateStr;
       })
-      .map(slot => {
-        const d = new Date(slot.start_time);
-        return `${d.getUTCHours().toString().padStart(2, '0')}:${d.getUTCMinutes().toString().padStart(2, '0')}`;
-      });
+      .map(slot => formatInTimezone(new Date(slot.start_time), businessTimezone));
 
     const [startH, startM] = dayHours.open.split(':').map(Number);
     const [endH, endM] = dayHours.close.split(':').map(Number);
@@ -128,7 +156,12 @@ const TimeSelect = () => {
           Choose a time
         </h2>
         <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">
-          Available slots for {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+           Available slots for {new Intl.DateTimeFormat('en-US', { 
+              month: 'long', 
+              day: 'numeric', 
+              year: 'numeric',
+              timeZone: business?.timezone || 'America/Juneau'
+           }).format(bookingData.date || selectedDate)}
         </p>
       </div>
 
@@ -154,7 +187,7 @@ const TimeSelect = () => {
                 Barber's Timezone
              </div>
              <p className="text-[10px] font-bold text-blue-600/80 uppercase">
-                {business?.timezone || 'Eastern Standard Time (EST)'}
+                {business?.timezone || 'America/Juneau'} ({getTimezoneOffset(business?.timezone || 'America/Juneau')})
              </p>
           </div>
         </div>

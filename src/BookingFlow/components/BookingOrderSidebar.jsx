@@ -86,7 +86,13 @@ const BookingOrderSidebar = () => {
               <div className="flex items-center justify-between mb-1">
                  <div className="flex items-center gap-2">
                     <Calendar size={12} className="text-black" />
-                    <span className="text-[11px] font-black text-black uppercase">{date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} at {timeSlot}</span>
+                    <span className="text-[11px] font-black text-black uppercase">
+                       {new Intl.DateTimeFormat('en-US', { 
+                          month: 'short', 
+                          day: 'numeric',
+                          timeZone: business?.timezone || 'America/Juneau' 
+                       }).format(date)} at {timeSlot}
+                    </span>
                  </div>
                  <span className="text-[10px] font-bold text-[var(--accent-primary)] uppercase tracking-wider">Confirmed</span>
               </div>

@@ -30,7 +30,15 @@ const PaymentConfirm = () => {
       });
 
       // Format date to YYYY-MM-DD
-      const formattedDate = bookingData.date.toISOString().split('T')[0];
+      // Format date to YYYY-MM-DD in business timezone
+      const businessTimezone = business?.timezone || 'America/Juneau';
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: businessTimezone,
+        year: 'numeric', month: '2-digit', day: '2-digit'
+      }).formatToParts(bookingData.date);
+      const p = {};
+      parts.forEach(part => p[part.type] = part.value);
+      const formattedDate = `${p.year}-${p.month}-${p.day}`;
       
       // Extract time from timeSlot (e.g., "09:00 - 09:30" -> "09:00")
       const timeMatch = bookingData.timeSlot?.match(/(\d{2}:\d{2})/);
