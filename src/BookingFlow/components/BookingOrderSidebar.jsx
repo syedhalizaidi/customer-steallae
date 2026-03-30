@@ -84,24 +84,16 @@ const BookingOrderSidebar = () => {
         {timeSlot && (
            <div className="pt-4 border-t border-dashed border-[var(--border-primary)] animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center justify-between mb-1">
-                 <div className="flex flex-col gap-1">
-                    <div className="flex items-center gap-2">
-                       <Calendar size={12} className="text-black" />
-                       <span className="text-[11px] font-black text-black uppercase">
-                          {new Intl.DateTimeFormat('en-US', { 
-                             month: 'short', 
-                             day: 'numeric',
-                             timeZone: business?.timezone || 'America/Juneau' 
-                          }).format(date)} at {timeSlot}
-                       </span>
-                    </div>
-                    <div className="flex items-center gap-2 pl-5">
-                       <Clock size={10} className="text-gray-400" />
-                       <span className="text-[9px] font-bold text-gray-400 uppercase">
-                          Your time: {getLocalTime(date)}
-                       </span>
-                    </div>
-                 </div>
+                  <div className="flex items-center gap-2">
+                     <Calendar size={12} className="text-black" />
+                     <span className="text-[11px] font-black text-black uppercase">
+                        {new Intl.DateTimeFormat('en-US', { 
+                           month: 'short', 
+                           day: 'numeric',
+                           timeZone: business?.timezone || 'America/Juneau' 
+                        }).format(date)} at {timeSlot}
+                     </span>
+                  </div>
                  <span className="text-[10px] font-bold text-[var(--accent-primary)] uppercase tracking-wider">Confirmed</span>
               </div>
            </div>
