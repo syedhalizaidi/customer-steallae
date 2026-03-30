@@ -79,11 +79,27 @@ export const getTimezoneOffset = (timezone) => {
   try {
     const parts = new Intl.DateTimeFormat('en-US', {
       timeZone: timezone,
-      timeZoneName: 'shortOffset'
+      timeZoneName: 'longOffset'
     }).formatToParts(new Date());
     
-    return parts.find(p => p.type === 'timeZoneName')?.value || '';
+    const val = parts.find(p => p.type === 'timeZoneName')?.value || '';
+    return val.replace('GMT', 'UTC');
   } catch (e) {
     return '';
   }
+};
+
+/**
+ * Returns the local time string for the user's current browser timezone.
+ * 
+ * @param {Date} date 
+ * @returns {string} - e.g., "10:00 PM"
+ */
+export const getLocalTime = (date) => {
+  if (!date) return '';
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
 };

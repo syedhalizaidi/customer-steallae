@@ -3,8 +3,8 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useBooking } from '../BookingContext';
-import { Clock, ChevronLeft, ChevronRight, Sun, Sunset, Moon } from 'lucide-react';
-import { getUTCDateTime, formatInTimezone, getTimezoneOffset } from '../../utils/timezoneUtils';
+import { Clock, ChevronLeft, ChevronRight, Sun, Sunset, Moon, Globe } from 'lucide-react';
+import { getUTCDateTime, formatInTimezone, getTimezoneOffset, getLocalTime } from '../../utils/timezoneUtils';
 import './TimeSelect.css'; // We'll create this for calendar overrides
 
 const TimeSelect = () => {
@@ -186,8 +186,15 @@ const TimeSelect = () => {
                 <Clock size={14} />
                 Barber's Timezone
              </div>
-             <p className="text-[10px] font-bold text-blue-600/80 uppercase">
+             <p className="text-[10px] font-bold text-blue-600/80 uppercase mb-3">
                 {business?.timezone || 'America/Juneau'} ({getTimezoneOffset(business?.timezone || 'America/Juneau')})
+             </p>
+             <div className="flex items-center gap-2 text-[10px] font-black text-blue-800 uppercase tracking-wider mb-2">
+                <Globe size={14} />
+                Your Local Time
+             </div>
+             <p className="text-[10px] font-bold text-blue-600/80 uppercase">
+                {bookingData.timeSlot ? `${getLocalTime(bookingData.date)}` : 'Select a slot'}
              </p>
           </div>
         </div>
