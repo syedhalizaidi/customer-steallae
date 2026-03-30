@@ -66,17 +66,20 @@ const TimeSelect = () => {
     const businessTimezone = business?.timezone || 'America/Juneau';
     const occupiedTimes = allOccupiedSlots
       .filter(slot => {
-        if (!slot.instance_id || !bookingData.staff || slot.instance_id !== bookingData.staff.id) return false;
+        // 1. Staff check: Block if it's a global block (null id) OR if it matches the selected staff
+        const isGlobalBlock = !slot.instance_id;
+        const isSelectedStaffBlock = bookingData.staff && slot.instance_id === bookingData.staff.id;
         
-        // Convert the UTC slot start_time to the business wall-time for comparison
+        if (!isGlobalBlock && !isSelectedStaffBlock) return false;
+        
+        // 2. Date check: Convert UTC slot time to business wall-date
         const slotDate = new Date(slot.start_time);
-        const businessDateStr = new Intl.DateTimeFormat('en-US', {
+        const businessDateStr = new Intl.DateTimeFormat('en-CA', { // YYYY-MM-DD format
             timeZone: businessTimezone,
             year: 'numeric', month: '2-digit', day: '2-digit'
         }).format(slotDate);
         
-        // selectedDate is client-local wall date. We need its wall parts.
-        const selectedDateStr = new Intl.DateTimeFormat('en-US', {
+        const selectedDateStr = new Intl.DateTimeFormat('en-CA', {
             year: 'numeric', month: '2-digit', day: '2-digit'
         }).format(selectedDate);
 
